@@ -40,17 +40,33 @@ func pickOutDirectory(directory string, target string) string {
 func shorten(sourceString string) []string {
 	var result []string
 
-	strList := strings.Split(sourceString, "-")
-	result = append(result, sourceString)
-	result = append(result, strings.Join(strList, ""))
+	{
+		strList := strings.Split(sourceString, "-")
+		result = append(result, sourceString)
+		result = append(result, strings.Join(strList, ""))
 
-	shortStr1List := shortSplit(sourceString, "-", 1)
-	result = append(result, strings.Join(shortStr1List, "-"))
-	result = append(result, strings.Join(shortStr1List, ""))
+		shortStr1List := shortSplit(sourceString, "-", 1)
+		result = append(result, strings.Join(shortStr1List, "-"))
+		result = append(result, strings.Join(shortStr1List, ""))
 
-	shortStr2List := shortSplit(sourceString, "-", 2)
-	result = append(result, strings.Join(shortStr2List, "-"))
-	result = append(result, strings.Join(shortStr2List, ""))
+		shortStr2List := shortSplit(sourceString, "-", 2)
+		result = append(result, strings.Join(shortStr2List, "-"))
+		result = append(result, strings.Join(shortStr2List, ""))
+	}
+
+	{
+		strList := strings.Split(sourceString, "_")
+		result = append(result, sourceString)
+		result = append(result, strings.Join(strList, ""))
+
+		shortStr1List := shortSplit(sourceString, "_", 1)
+		result = append(result, strings.Join(shortStr1List, "_"))
+		result = append(result, strings.Join(shortStr1List, ""))
+
+		shortStr2List := shortSplit(sourceString, "_", 2)
+		result = append(result, strings.Join(shortStr2List, "_"))
+		result = append(result, strings.Join(shortStr2List, ""))
+	}
 
 	return result
 }

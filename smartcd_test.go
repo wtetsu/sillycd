@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"testing" // テストで使える関数・構造体が用意されているパッケージをimport
 )
 
@@ -54,8 +53,6 @@ func Test02(t *testing.T) {
 func Test03(t *testing.T) {
 	result := shorten("abc-d-ghi")
 
-	fmt.Println(result)
-
 	if !contains(result, "ab-d-gh") {
 		t.Fatal("failed test")
 	}
@@ -69,6 +66,75 @@ func Test03(t *testing.T) {
 		t.Fatal("failed test")
 	}
 	if !contains(result, "ab-d-gh") {
+		t.Fatal("failed test")
+	}
+	if !contains(result, "abdgh") {
+		t.Fatal("failed test")
+	}
+}
+
+func Test04(t *testing.T) {
+	result := shorten("abc_def_ghi")
+
+	if !contains(result, "abc_def_ghi") {
+		t.Fatal("failed test")
+	}
+	if !contains(result, "abcdefghi") {
+		t.Fatal("failed test")
+	}
+	if !contains(result, "a_d_g") {
+		t.Fatal("failed test")
+	}
+	if !contains(result, "adg") {
+		t.Fatal("failed test")
+	}
+	if !contains(result, "ab_de_gh") {
+		t.Fatal("failed test")
+	}
+	if !contains(result, "abdegh") {
+		t.Fatal("failed test")
+	}
+}
+
+func Test05(t *testing.T) {
+	result := shorten("ab_de_gh")
+
+	if !contains(result, "ab_de_gh") {
+		t.Fatal("failed test")
+	}
+	if !contains(result, "abdegh") {
+		t.Fatal("failed test")
+	}
+	if !contains(result, "a_d_g") {
+		t.Fatal("failed test")
+	}
+	if !contains(result, "adg") {
+		t.Fatal("failed test")
+	}
+	if !contains(result, "ab_de_gh") {
+		t.Fatal("failed test")
+	}
+	if !contains(result, "abdegh") {
+		t.Fatal("failed test")
+	}
+}
+
+func Test06(t *testing.T) {
+	result := shorten("abc_d_ghi")
+
+	if !contains(result, "ab_d_gh") {
+		t.Fatal("failed test")
+	}
+	if !contains(result, "abdgh") {
+		t.Fatal("failed test")
+	}
+	if !contains(result, "a_d_g") {
+		t.Fatal("failed test")
+	}
+	if !contains(result, "adg") {
+		t.Fatal("failed test")
+	}
+	if !contains(result, "ab_d_gh") {
 		t.Fatal("failed test")
 	}
 	if !contains(result, "abdgh") {
