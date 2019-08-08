@@ -1,11 +1,13 @@
-package main
+package stupidcd
 
 import (
-	"testing" // テストで使える関数・構造体が用意されているパッケージをimport
+	"testing"
+
+	"../pkg/stupidcd"
 )
 
 func Test01(t *testing.T) {
-	result := shorten("abc-def-ghi")
+	result := stupidcd.Shorten("abc-def-ghi")
 
 	if !contains(result, "abc-def-ghi") {
 		t.Fatal("failed test")
@@ -28,7 +30,7 @@ func Test01(t *testing.T) {
 }
 
 func Test02(t *testing.T) {
-	result := shorten("ab-de-gh")
+	result := stupidcd.Shorten("ab-de-gh")
 
 	if !contains(result, "ab-de-gh") {
 		t.Fatal("failed test")
@@ -51,7 +53,7 @@ func Test02(t *testing.T) {
 }
 
 func Test03(t *testing.T) {
-	result := shorten("abc-d-ghi")
+	result := stupidcd.Shorten("abc-d-ghi")
 
 	if !contains(result, "ab-d-gh") {
 		t.Fatal("failed test")
@@ -74,7 +76,7 @@ func Test03(t *testing.T) {
 }
 
 func Test04(t *testing.T) {
-	result := shorten("abc_def_ghi")
+	result := stupidcd.Shorten("abc_def_ghi")
 
 	if !contains(result, "abc_def_ghi") {
 		t.Fatal("failed test")
@@ -97,7 +99,7 @@ func Test04(t *testing.T) {
 }
 
 func Test05(t *testing.T) {
-	result := shorten("ab_de_gh")
+	result := stupidcd.Shorten("ab_de_gh")
 
 	if !contains(result, "ab_de_gh") {
 		t.Fatal("failed test")
@@ -120,7 +122,7 @@ func Test05(t *testing.T) {
 }
 
 func Test06(t *testing.T) {
-	result := shorten("abc_d_ghi")
+	result := stupidcd.Shorten("abc_d_ghi")
 
 	if !contains(result, "ab_d_gh") {
 		t.Fatal("failed test")

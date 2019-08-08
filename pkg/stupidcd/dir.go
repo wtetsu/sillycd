@@ -1,27 +1,12 @@
-package main
+package stupidcd
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
 )
 
-func main() {
-	if len(os.Args) != 2 {
-		fmt.Fprintln(os.Stderr, "Wrong argument")
-		os.Exit(1)
-	}
-
-	foundDirectory := pickOutDirectory(".", os.Args[1])
-
-	if foundDirectory == "" {
-		os.Exit(1)
-	}
-	fmt.Println(foundDirectory)
-}
-
-func pickOutDirectory(directory string, target string) string {
+func PickOutDirectory(directory string, target string) string {
 	var foundDirectory string
 
 	directories := findDirectories(directory)
@@ -35,6 +20,10 @@ func pickOutDirectory(directory string, target string) string {
 		}
 	}
 	return foundDirectory
+}
+
+func Shorten(sourceString string) []string {
+	return shorten(sourceString)
 }
 
 func shorten(sourceString string) []string {
