@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"../../pkg/stupidcd"
+	"./pkg/stupidcd"
 )
 
 func main() {
