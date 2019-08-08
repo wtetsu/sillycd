@@ -3,7 +3,7 @@ package stupidcd
 import (
 	"testing"
 
-	"../pkg/stupidcd"
+	"github.com/wtetsu/stupidcd/pkg/stupidcd"
 )
 
 func Test01(t *testing.T) {
