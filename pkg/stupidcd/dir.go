@@ -1,20 +1,20 @@
 package stupidcd
 
 import (
-	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
 func PickOutDirectory(directory string, target string) string {
 	var foundDirectory string
 
-	directories := findDirectories(directory)
+	directories := findDirectories(directory, target)
 	for _, directory := range directories {
-		names := shorten(directory.Name())
+		names := shorten(directory)
 		for _, name := range names {
 			if name == target {
-				foundDirectory = directory.Name()
+				foundDirectory = directory
 				break
 			}
 		}
@@ -73,19 +73,35 @@ func shortSplit(sourceString string, separater string, length int) []string {
 	return result
 }
 
-func findDirectories(target string) []os.FileInfo {
-	filesAndDirectories, err := ioutil.ReadDir(target)
+func findDirectories(targetDirectory string, targetFile string) []string {
+	var firstLetter = targetFile[0:1]
+	var lowerLetter = strings.ToLower(firstLetter)
+	var upperLetter = strings.ToUpper(firstLetter)
 
+	entries1, err := filepath.Glob(targetDirectory + "/" + strings.ToLower(firstLetter) + "*")
+	if err != nil {
+		panic(err)
+	}
+	entries2, err := filepath.Glob(targetDirectory + "/" + strings.ToUpper(firstLetter) + "*")
 	if err != nil {
 		panic(err)
 	}
 
-	var directories []os.FileInfo
-	for _, file := range filesAndDirectories {
-		if file.IsDir() {
-			directories = append(directories, file)
+	var entries []string
+
+	if upperLetter == firstLetter {
+		entries = append(entries1, entries2...)
+	} else if lowerLetter == firstLetter {
+		entries = append(entries2, entries1...)
+	}
+
+	var directories []string
+	for _, entry := range entries {
+		fileInfo, _ := os.Stat(entry)
+		if fileInfo.IsDir() {
+			directories = append(directories, entry)
 		}
 	}
-	return directories
 
+	return directories
 }
