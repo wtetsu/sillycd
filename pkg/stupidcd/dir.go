@@ -6,20 +6,34 @@ import (
 	"strings"
 )
 
-func PickOutDirectory(directory string, target string) string {
+func PickOutDirectory(targetPath string) string {
 	var foundDirectory string
+	var splittedPath = strings.Split(filepath.ToSlash(targetPath), "/")
 
-	directories := findDirectories(directory, target)
+	var targetDirectory = splittedPath[0]
+	var targetName = splittedPath[1]
+
+	var fullPath = targetDirectory + "/" + targetName
+	if dirExist(fullPath) {
+		return fullPath
+	}
+
+	directories := findDirectories(targetDirectory, targetName)
 	for _, directory := range directories {
 		names := shorten(directory)
 		for _, name := range names {
-			if name == target {
+			if name == targetName {
 				foundDirectory = directory
 				break
 			}
 		}
 	}
 	return foundDirectory
+}
+
+func dirExist(path string) bool {
+	fileInfo, err := os.Stat(path)
+	return err == nil && fileInfo.IsDir()
 }
 
 func Shorten(sourceString string) []string {

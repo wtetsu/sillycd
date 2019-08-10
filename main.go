@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/wtetsu/stupidcd/pkg/stupidcd"
 )
@@ -13,7 +14,16 @@ func main() {
 		os.Exit(1)
 	}
 
-	foundDirectory := stupidcd.PickOutDirectory(".", os.Args[1])
+	var specifiedName = os.Args[1]
+	var target string
+
+	if filepath.IsAbs(specifiedName) {
+		target = specifiedName
+	} else {
+		target = "./" + specifiedName
+	}
+
+	foundDirectory := stupidcd.PickOutDirectory(target)
 
 	if foundDirectory == "" {
 		os.Exit(1)
