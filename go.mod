@@ -1,3 +1,3 @@
-module github.com/wtetsu/stupidcd
+module github.com/wtetsu/sillycd
 
 go 1.12

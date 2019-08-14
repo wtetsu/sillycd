@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/wtetsu/stupidcd/pkg/stupidcd"
+	"github.com/wtetsu/sillycd/pkg/sillycd"
 )
 
 func main() {
@@ -23,7 +23,7 @@ func main() {
 		target = "./" + specifiedName
 	}
 
-	foundDirectory := stupidcd.PickOutDirectory(target)
+	foundDirectory := sillycd.PickOutDirectory(target)
 
 	if foundDirectory == "" {
 		os.Exit(1)

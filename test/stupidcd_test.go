@@ -1,13 +1,13 @@
-package stupidcd
+package sillycd
 
 import (
 	"testing"
 
-	"github.com/wtetsu/stupidcd/pkg/stupidcd"
+	"github.com/wtetsu/sillycd/pkg/sillycd"
 )
 
 func Test01(t *testing.T) {
-	result := stupidcd.Shorten("abc-def-ghi")
+	result := sillycd.Shorten("abc-def-ghi")
 
 	if !contains(result, "abc-def-ghi") {
 		t.Fatal("failed test")
@@ -30,7 +30,7 @@ func Test01(t *testing.T) {
 }
 
 func Test02(t *testing.T) {
-	result := stupidcd.Shorten("ab-de-gh")
+	result := sillycd.Shorten("ab-de-gh")
 
 	if !contains(result, "ab-de-gh") {
 		t.Fatal("failed test")
@@ -53,7 +53,7 @@ func Test02(t *testing.T) {
 }
 
 func Test03(t *testing.T) {
-	result := stupidcd.Shorten("abc-d-ghi")
+	result := sillycd.Shorten("abc-d-ghi")
 
 	if !contains(result, "ab-d-gh") {
 		t.Fatal("failed test")
@@ -76,7 +76,7 @@ func Test03(t *testing.T) {
 }
 
 func Test04(t *testing.T) {
-	result := stupidcd.Shorten("abc_def_ghi")
+	result := sillycd.Shorten("abc_def_ghi")
 
 	if !contains(result, "abc_def_ghi") {
 		t.Fatal("failed test")
@@ -99,7 +99,7 @@ func Test04(t *testing.T) {
 }
 
 func Test05(t *testing.T) {
-	result := stupidcd.Shorten("ab_de_gh")
+	result := sillycd.Shorten("ab_de_gh")
 
 	if !contains(result, "ab_de_gh") {
 		t.Fatal("failed test")
@@ -122,7 +122,7 @@ func Test05(t *testing.T) {
 }
 
 func Test06(t *testing.T) {
-	result := stupidcd.Shorten("abc_d_ghi")
+	result := sillycd.Shorten("abc_d_ghi")
 
 	if !contains(result, "ab_d_gh") {
 		t.Fatal("failed test")

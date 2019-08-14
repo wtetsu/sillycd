@@ -1,11 +1,11 @@
 # smartcd
 
-[![Build Status](https://travis-ci.com/wtetsu/stupidcd.svg?branch=master)](https://travis-ci.com/wtetsu/stupidcd)
+[![Build Status](https://travis-ci.com/wtetsu/sillycd.svg?branch=master)](https://travis-ci.com/wtetsu/sillycd)
 
 ## Install
 
 ```
-go get -u github.com/wtetsu/stupidcd
+go get -u github.com/wtetsu/sillycd
 ```
 
 ## Define a shell function
@@ -16,7 +16,7 @@ go get -u github.com/wtetsu/stupidcd
 #! /bin/sh
 
 function c() {
-  d=`stupidcd $1`
+  d=`sillycd $1`
   if [ $? -eq 0 ]; then
     echo $d
     cd $d

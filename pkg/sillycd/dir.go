@@ -1,4 +1,4 @@
-package stupidcd
+package sillycd
 
 import (
 	"os"
