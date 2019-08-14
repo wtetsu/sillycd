@@ -6,7 +6,13 @@ import (
 	"strings"
 )
 
+// PickOutDirectory picks out one directory.
 func PickOutDirectory(targetPath string) string {
+	return PickOutDirectoryWithFunction(targetPath, findDirectories)
+}
+
+// PickOutDirectoryWithFunction picks out one directory.
+func PickOutDirectoryWithFunction(targetPath string, doGetDirectories func(string, string) []string) string {
 	var foundDirectory string
 	var splittedPath = strings.Split(filepath.ToSlash(targetPath), "/")
 
