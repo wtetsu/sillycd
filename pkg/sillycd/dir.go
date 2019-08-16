@@ -13,28 +13,42 @@ func PickOutDirectory(targetPath string) string {
 
 // PickOutDirectoryWithFunction picks out one directory.
 func PickOutDirectoryWithFunction(targetPath string, doGetDirectories func(string, string) []string) string {
-	var foundDirectory string
 	var splittedPath = strings.Split(filepath.ToSlash(targetPath), "/")
 
-	var targetDirectory = splittedPath[0]
-	var targetName = splittedPath[1]
-
-	var fullPath = targetDirectory + "/" + targetName
-	if dirExist(fullPath) {
-		return fullPath
+	var firstDirectory string
+	if filepath.IsAbs(targetPath) {
+		firstDirectory = filepath.Join("/" + splittedPath[0])
+	} else {
+		absolutePath, err := filepath.Abs(splittedPath[0])
+		if err != nil {
+			panic(err)
+		}
+		firstDirectory = absolutePath
 	}
 
-	directories := findDirectories(targetDirectory, targetName)
-	for _, directory := range directories {
-		names := shorten(directory)
-		for _, name := range names {
-			if name == targetName {
-				foundDirectory = directory
+	resultDirectory := traverseDirectoriesByTheEnd(firstDirectory, splittedPath[1:], doGetDirectories)
+	return resultDirectory
+}
+
+func traverseDirectoriesByTheEnd(firstTargetDirectory string, wishTargets []string, doGetDirectories func(string, string) []string) string {
+	var doFindDirectory func(string, int) string
+
+	doFindDirectory = func(targetDirectory string, currentIndex int) string {
+		if currentIndex >= len(wishTargets) {
+			return targetDirectory
+		}
+		var candidate string
+		directories := doGetDirectories(targetDirectory, wishTargets[currentIndex])
+		for _, dir := range directories {
+			candidate = doFindDirectory(filepath.Join(targetDirectory, dir), currentIndex+1)
+			if candidate != "" {
 				break
 			}
 		}
+		return candidate
 	}
-	return foundDirectory
+
+	return doFindDirectory(firstTargetDirectory, 0)
 }
 
 func dirExist(path string) bool {
@@ -42,6 +56,7 @@ func dirExist(path string) bool {
 	return err == nil && fileInfo.IsDir()
 }
 
+// Shorten returns shortened names.
 func Shorten(sourceString string) []string {
 	return shorten(sourceString)
 }
@@ -93,35 +108,67 @@ func shortSplit(sourceString string, separater string, length int) []string {
 	return result
 }
 
-func findDirectories(targetDirectory string, targetFile string) []string {
+func findDirectories(targetDirectory string, targetName string) []string {
+	patterns := generateFindDictionaryPatterns(targetDirectory, targetName)
+	var directories []string
+	for _, pattern := range patterns {
+		foundDirectories := findDirectoriesByPattern(pattern)
+		matchedDirectories := filterDirectoriesByName(foundDirectories, targetName)
+		directories = append(directories, matchedDirectories...)
+	}
+	return directories
+}
+
+func filterDirectoriesByName(directories []string, targetName string) []string {
+	var filteredDirectories []string
+	for _, directory := range directories {
+		shortNames := shorten(directory)
+		for _, name := range shortNames {
+			if name == targetName {
+				foundDirectory := directory
+				filteredDirectories = append(filteredDirectories, foundDirectory)
+			}
+		}
+	}
+	return filteredDirectories
+}
+
+func generateFindDictionaryPatterns(targetDirectory string, targetFile string) []string {
+	var patterns []string
+	if len(targetFile) == 0 {
+		return patterns
+	}
 	var firstLetter = targetFile[0:1]
 	var lowerLetter = strings.ToLower(firstLetter)
 	var upperLetter = strings.ToUpper(firstLetter)
 
-	entries1, err := filepath.Glob(targetDirectory + "/" + strings.ToLower(firstLetter) + "*")
-	if err != nil {
-		panic(err)
-	}
-	entries2, err := filepath.Glob(targetDirectory + "/" + strings.ToUpper(firstLetter) + "*")
-	if err != nil {
-		panic(err)
-	}
-
-	var entries []string
-
-	if upperLetter == firstLetter {
-		entries = append(entries1, entries2...)
+	if lowerLetter == firstLetter {
+		patterns = []string{
+			filepath.Join(targetDirectory, lowerLetter) + "*",
+			filepath.Join(targetDirectory, upperLetter) + "*",
+		}
 	} else if lowerLetter == firstLetter {
-		entries = append(entries2, entries1...)
+		patterns = []string{
+			filepath.Join(targetDirectory, upperLetter) + "*",
+			filepath.Join(targetDirectory, lowerLetter) + "*",
+		}
 	}
+	return patterns
 
+}
+
+func findDirectoriesByPattern(pattern string) []string {
 	var directories []string
+	entries, err := filepath.Glob(pattern)
+	if err != nil {
+		panic(err)
+	}
 	for _, entry := range entries {
 		fileInfo, _ := os.Stat(entry)
 		if fileInfo.IsDir() {
-			directories = append(directories, entry)
+			relativePath := filepath.Base(entry)
+			directories = append(directories, relativePath)
 		}
 	}
-
 	return directories
 }
