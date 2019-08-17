@@ -1,4 +1,4 @@
-# smartcd
+# sillycd
 
 [![Build Status](https://travis-ci.com/wtetsu/sillycd.svg?branch=master)](https://travis-ci.com/wtetsu/sillycd)
 
