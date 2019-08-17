@@ -16,6 +16,7 @@ package sillycd
 import (
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 )
 
@@ -126,26 +127,116 @@ func findDirectories(targetDirectory string, targetName string) []string {
 	var directories []string
 	for _, pattern := range patterns {
 		foundDirectories := findDirectoriesByPattern(pattern)
-		matchedDirectories := filterDirectoriesByName(foundDirectories, targetName)
-		directories = append(directories, matchedDirectories...)
+		directories = append(directories, foundDirectories...)
 	}
-	return directories
+	sortedDirectories := sortDirectoriesByScore(directories, targetName)
+	return sortedDirectories
 }
 
-func filterDirectoriesByName(directories []string, targetName string) []string {
-	var filteredDirectories []string
-	for _, directory := range directories {
-		shortNames := shorten(directory)
-		for _, name := range shortNames {
-			if name == targetName {
-				foundDirectory := directory
-				filteredDirectories = append(filteredDirectories, foundDirectory)
+type directory struct {
+	Name  string
+	Score int
+}
+
+func sortDirectoriesByScore(directoryNames []string, targetName string) []string {
+	var directories []directory
+	for _, dirName := range directoryNames {
+		score := computeDirectoryScore(dirName, targetName)
+		if score > 0 {
+			directories = append(directories, directory{dirName, score})
+		}
+	}
+
+	sort.SliceStable(directories, func(i, j int) bool {
+		return directories[i].Score > directories[j].Score
+	})
+
+	var sortedDirectoryNames []string
+	for _, dirName := range directories {
+		sortedDirectoryNames = append(sortedDirectoryNames, dirName.Name)
+	}
+	return sortedDirectoryNames
+}
+
+// "foo-bar-baz"
+//   "f":   10
+//   "fo":  20
+//   "fb":  20
+//   "fbb": 30
+//   "foo-bar-baz": 999999999
+func computeDirectoryScore(directoryName string, specifiedName string) int {
+	var score int
+
+	names := splitDirectoryName(directoryName)
+	var restSpecifiedName = specifiedName
+
+	for i := 0; ; i++ {
+		if restSpecifiedName == "" {
+			break
+		}
+		if i >= len(names) {
+			score = -1
+			break
+		}
+		name := names[i]
+
+		len, rate := matchedPrefixLength(name, restSpecifiedName)
+		if len == 0 {
+			score = -1
+			break
+		}
+		score += rate * 5
+		restSpecifiedName = restSpecifiedName[len:]
+	}
+
+	return score
+}
+
+func matchedPrefixLength(orgString string, orgPrefix string) (int, int) {
+	str := strings.ToLower(orgString)
+	prefix := strings.ToLower(orgPrefix)
+
+	var length int
+	var rate int
+	for i := 0; ; i++ {
+		if i >= len(str) || i >= len(prefix) {
+			break
+		}
+		if orgString[i] == orgPrefix[i] {
+			length++
+			rate += 2
+		} else if str[i] == prefix[i] {
+			length++
+			rate++
+		} else {
+			break
+		}
+	}
+	return length, rate
+}
+
+func splitDirectoryName(directoryName string) []string {
+	var splitNames []string
+	var lastIndex = -1
+	for i, ch := range directoryName {
+		if ch == '-' || ch == '_' || ch == ' ' || ch == '.' {
+			if lastIndex >= 0 {
+				splitNames = append(splitNames, directoryName[lastIndex:i])
+				lastIndex = -1
+			}
+		} else {
+			if lastIndex == -1 {
+				lastIndex = i
 			}
 		}
 	}
-	return filteredDirectories
-}
 
+	if lastIndex >= 0 {
+		splitNames = append(splitNames, directoryName[lastIndex:])
+	}
+
+	return splitNames
+}
 func generateFindDictionaryPatterns(targetDirectory string, targetFile string) []string {
 	var patterns []string
 	if len(targetFile) == 0 {
@@ -160,14 +251,13 @@ func generateFindDictionaryPatterns(targetDirectory string, targetFile string) [
 			filepath.Join(targetDirectory, lowerLetter) + "*",
 			filepath.Join(targetDirectory, upperLetter) + "*",
 		}
-	} else if lowerLetter == firstLetter {
+	} else if upperLetter == firstLetter {
 		patterns = []string{
 			filepath.Join(targetDirectory, upperLetter) + "*",
 			filepath.Join(targetDirectory, lowerLetter) + "*",
 		}
 	}
 	return patterns
-
 }
 
 func findDirectoriesByPattern(pattern string) []string {
