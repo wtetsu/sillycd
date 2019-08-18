@@ -16,7 +16,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 
 	"github.com/wtetsu/sillycd/pkg/sillycd"
 )
@@ -30,7 +29,7 @@ func main() {
 	var specifiedName = os.Args[1]
 	var target string
 
-	if filepath.IsAbs(specifiedName) {
+	if sillycd.IsAbs(specifiedName) {
 		target = specifiedName
 	} else {
 		target = "./" + specifiedName

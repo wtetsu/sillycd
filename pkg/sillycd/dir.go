@@ -26,12 +26,25 @@ func PickOutDirectory(targetPath string) string {
 }
 
 // PickOutDirectoryWithFunction picks out one directory.
-func PickOutDirectoryWithFunction(targetPath string, doGetDirectories func(string, string) []string) string {
-	var splittedPath = strings.Split(filepath.ToSlash(targetPath), "/")
+func PickOutDirectoryWithFunction(orgTargetDirectory string, doGetDirectories func(string, string) []string) string {
+	if len(orgTargetDirectory) == 0 {
+		return ""
+	}
 
+	var targetPath string
+
+	firstLetter := orgTargetDirectory[0]
+	if firstLetter == '/' || firstLetter == '\\' {
+		targetPath = getVolumeName() + filepath.ToSlash(orgTargetDirectory)
+	} else {
+		targetPath = filepath.ToSlash(orgTargetDirectory)
+	}
+
+	var splittedPath = strings.Split(targetPath, "/")
 	var firstDirectory string
-	if filepath.IsAbs(targetPath) {
-		firstDirectory = filepath.Join("/" + splittedPath[0])
+
+	if IsAbs(targetPath) {
+		firstDirectory = getFirstDirectory(targetPath)
 	} else {
 		absolutePath, err := filepath.Abs(splittedPath[0])
 		if err != nil {
@@ -246,6 +259,13 @@ func generateFindDictionaryPatterns(targetDirectory string, targetFile string) [
 	var lowerLetter = strings.ToLower(firstLetter)
 	var upperLetter = strings.ToUpper(firstLetter)
 
+	// var targetDirectory string
+	// if orgTargetDirectory == "\\" {
+	// 	targetDirectory = getVolumeName() + "\\"
+	// } else {
+	// 	targetDirectory = orgTargetDirectory
+	// }
+
 	if lowerLetter == firstLetter {
 		patterns = []string{
 			filepath.Join(targetDirectory, lowerLetter) + "*",
@@ -264,7 +284,7 @@ func findDirectoriesByPattern(pattern string) []string {
 	var directories []string
 	entries, err := filepath.Glob(pattern)
 	if err != nil {
-		panic(err)
+		return directories
 	}
 	for _, entry := range entries {
 		fileInfo, _ := os.Stat(entry)
@@ -274,4 +294,43 @@ func findDirectoriesByPattern(pattern string) []string {
 		}
 	}
 	return directories
+}
+
+// path delimiter must be "/" in this function.
+func getFirstDirectory(path string) string {
+	if len(path) == 0 {
+		return ""
+	}
+	if len(path) >= 2 && path[1] == ':' {
+		f := path[0]
+		if f >= 'A' || f <= 'Z' || f >= 'a' || f <= 'z' {
+			return path[0:2] + "/"
+		}
+	}
+	if path[0] == '/' {
+		return "/"
+	}
+	return ""
+}
+
+// IsAbs reports whether the path is absolute.
+func IsAbs(path string) bool {
+	if len(path) == 0 {
+		return false
+	}
+	if len(path) >= 2 {
+		f := path[0]
+		if path[1] == ':' && (f >= 'A' || f <= 'Z' || f >= 'a' || f <= 'z') {
+			return true
+		}
+	}
+	return path[0] == '/'
+}
+
+func getVolumeName() string {
+	path, err := filepath.Abs(".")
+	if err != nil {
+		return ""
+	}
+	return filepath.VolumeName(path)
 }
