@@ -48,7 +48,7 @@ func PickOutDirectoryWithFunction(orgTargetDirectory string, doGetDirectories fu
 	} else {
 		absolutePath, err := filepath.Abs(splittedPath[0])
 		if err != nil {
-			panic(err)
+			return ""
 		}
 		firstDirectory = absolutePath
 	}
@@ -231,8 +231,8 @@ func findDirectoriesByPattern(pattern string) []string {
 		return directories
 	}
 	for _, entry := range entries {
-		fileInfo, _ := os.Stat(entry)
-		if fileInfo.IsDir() {
+		fileInfo, err := os.Stat(entry)
+		if err == nil && fileInfo.IsDir() {
 			relativePath := filepath.Base(entry)
 			directories = append(directories, relativePath)
 		}
