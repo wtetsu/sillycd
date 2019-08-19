@@ -8,17 +8,22 @@ Reduce your typing dramatically when doing cd.
 
 ## Bash
 
+```sh
+$ c /l/as/as
+/Library/Application Support/App Store
+```
+
 ## Windows
 
 ```bat
-c /pf/mss/100
-  -> C:\Program Files\Microsoft SQL Server\100
+c:\>c /pf/mss/100
+c:\Program Files\Microsoft SQL Server\100
 
-c /pf/mss
-  -> C:\Program Files\Microsoft SQL Server
+c:\>c /pf/mss
+c:\Program Files\Microsoft SQL Server
 
-c /pf/mss/v
-  -> C:\Program Files\Microsoft SQL Server Compact Edition\v4.0
+c:\>c /pf/mss/v
+C:\Program Files\Microsoft SQL Server Compact Edition\v4.0
 ```
 
 # Install
@@ -54,7 +59,7 @@ Put a bat file like c.bat.
 @for /f "delims=" %%i in ('sillycd %1') do @set __sillycd_target=%%i
 @if not "%__sillycd_target%" == "" (
   @echo %__sillycd_target%
-  @cd %__sillycd_target%
+  @cd /d "%__sillycd_target%"
 )
 @set __sillycd_target=
 ```
