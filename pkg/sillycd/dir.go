@@ -84,6 +84,11 @@ func dirExist(path string) bool {
 }
 
 func findDirectories(targetDirectory string, targetName string) []string {
+	if strings.HasPrefix(targetName, ".") {
+		return []string{
+			targetName,
+		}
+	}
 	patterns := generateFindDictionaryPatterns(targetDirectory, targetName)
 	var directories []string
 	for _, pattern := range patterns {
