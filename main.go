@@ -16,17 +16,23 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/user"
 
 	"github.com/wtetsu/sillycd/pkg/sillycd"
 )
 
 func main() {
-	if len(os.Args) != 2 {
+	var specifiedName string
+
+	if len(os.Args) <= 1 {
+		specifiedName = getHomeDir()
+	} else if len(os.Args) == 2 {
+		specifiedName = os.Args[1]
+	} else {
 		fmt.Fprintln(os.Stderr, "Wrong argument")
 		os.Exit(1)
 	}
 
-	var specifiedName = os.Args[1]
 	var target string
 
 	if sillycd.IsAbs(specifiedName) {
@@ -41,4 +47,12 @@ func main() {
 		os.Exit(1)
 	}
 	fmt.Println(foundDirectory)
+}
+
+func getHomeDir() string {
+	user, err := user.Current()
+	if err != nil {
+		panic(err)
+	}
+	return user.HomeDir
 }
