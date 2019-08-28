@@ -89,9 +89,11 @@ func traverseDirectoriesByTheEnd(firstTargetDirectory string, wishTargets []stri
 		if currentIndex >= len(wishTargets) {
 			return targetDirectory
 		}
+		name := wishTargets[currentIndex]
 		var candidate string
-		directories := doGetDirectories(targetDirectory, wishTargets[currentIndex])
-		for _, dir := range directories {
+		directories := doGetDirectories(targetDirectory, name)
+		sortedDirectories := sortDirectoriesByScore(directories, name)
+		for _, dir := range sortedDirectories {
 			candidate = doFindDirectory(filepath.Join(targetDirectory, dir), currentIndex+1)
 			if candidate != "" {
 				break
@@ -120,8 +122,7 @@ func findDirectories(targetDirectory string, targetName string) []string {
 		foundDirectories := findDirectoriesByPattern(pattern)
 		directories = append(directories, foundDirectories...)
 	}
-	sortedDirectories := sortDirectoriesByScore(directories, targetName)
-	return sortedDirectories
+	return directories
 }
 
 type directory struct {
