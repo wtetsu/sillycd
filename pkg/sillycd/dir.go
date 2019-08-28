@@ -40,7 +40,7 @@ func PickOutDirectoryWithFunction(orgTargetDirectory string, doGetDirectories fu
 		targetPath = filepath.ToSlash(orgTargetDirectory)
 	}
 
-	var splittedPath = strings.Split(targetPath, "/")
+	var splittedPath = splitPath(targetPath, "/")
 	var firstDirectory string
 
 	if IsAbs(targetPath) {
@@ -53,8 +53,33 @@ func PickOutDirectoryWithFunction(orgTargetDirectory string, doGetDirectories fu
 		firstDirectory = absolutePath
 	}
 
+	if len(splittedPath) <= 1 {
+		return filepath.Join(firstDirectory)
+	}
+
 	resultDirectory := traverseDirectoriesByTheEnd(firstDirectory, splittedPath[1:], doGetDirectories)
 	return resultDirectory
+}
+
+func splitPath(path string, delimiter string) []string {
+	var result []string
+	lastIndex := 0
+	for i := 0; i < len(path); i++ {
+		if path[i:i+1] == delimiter {
+			s := path[lastIndex:i]
+			if len(s) > 0 && s != delimiter {
+				result = append(result, s)
+			}
+			lastIndex = i + 1
+		}
+	}
+
+	s := path[lastIndex:]
+	if len(s) > 0 && s != delimiter {
+		result = append(result, s)
+	}
+
+	return result
 }
 
 func traverseDirectoriesByTheEnd(firstTargetDirectory string, wishTargets []string, doGetDirectories func(string, string) []string) string {
