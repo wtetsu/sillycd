@@ -32,7 +32,6 @@ func PickOutDirectoryWithFunction(orgTargetDirectory string, doGetDirectories fu
 	}
 
 	var targetPath string
-
 	firstLetter := orgTargetDirectory[0]
 	if firstLetter == '/' || firstLetter == '\\' {
 		targetPath = getVolumeName() + filepath.ToSlash(orgTargetDirectory)
@@ -53,28 +52,34 @@ func PickOutDirectoryWithFunction(orgTargetDirectory string, doGetDirectories fu
 		firstDirectory = absolutePath
 	}
 
-	if len(splittedPath) <= 1 {
+	if len(splittedPath) <= 0 {
 		return filepath.Join(firstDirectory)
 	}
 
-	resultDirectory := traverseDirectoriesByTheEnd(firstDirectory, splittedPath[1:], doGetDirectories)
+	resultDirectory := traverseDirectoriesByTheEnd(firstDirectory, splittedPath, doGetDirectories)
 	return resultDirectory
 }
 
-func splitPath(path string, delimiter string) []string {
+// splitPath splits a full path string.
+//
+// - "/usr/local/bin" -> ["usr", "local", "bin"]
+// - "c:/Program Files/Git" -> ["Program Files", "Git"]
+func splitPath(fullPath string, delimiter string) []string {
 	var result []string
 	lastIndex := 0
-	for i := 0; i < len(path); i++ {
-		if path[i:i+1] == delimiter {
-			s := path[lastIndex:i]
-			if len(s) > 0 && s != delimiter {
-				result = append(result, s)
+	for i := 0; i < len(fullPath); i++ {
+		if fullPath[i:i+1] == delimiter {
+			if lastIndex > 0 {
+				s := fullPath[lastIndex:i]
+				if len(s) > 0 && s != delimiter {
+					result = append(result, s)
+				}
 			}
 			lastIndex = i + 1
 		}
 	}
 
-	s := path[lastIndex:]
+	s := fullPath[lastIndex:]
 	if len(s) > 0 && s != delimiter {
 		result = append(result, s)
 	}
