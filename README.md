@@ -60,6 +60,8 @@ Put a bat file like c.bat.
 @if not "%__sillycd_target%" == "" (
   @echo %__sillycd_target%
   @cd /d "%__sillycd_target%"
+) else (
+  @echo No such directory
 )
 @set __sillycd_target=
 ```
