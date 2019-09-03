@@ -39,18 +39,8 @@ func PickOutDirectoryWithFunction(orgTargetDirectory string, doGetDirectories fu
 		targetPath = filepath.ToSlash(orgTargetDirectory)
 	}
 
-	var splittedPath = splitPath(targetPath, "/")
-	var firstDirectory string
-
-	if IsAbs(targetPath) {
-		firstDirectory = getFirstDirectory(targetPath)
-	} else {
-		absolutePath, err := filepath.Abs(splittedPath[0])
-		if err != nil {
-			return ""
-		}
-		firstDirectory = absolutePath
-	}
+	firstDirectory := getFirstDirectory(targetPath)
+	splittedPath := splitPath(targetPath, "/")
 
 	if len(splittedPath) <= 0 {
 		return filepath.Join(firstDirectory)
@@ -277,6 +267,12 @@ func findDirectoriesByPattern(pattern string) []string {
 }
 
 // path delimiter must be "/" in this function.
+// /usr/local/bin      -> /
+// relative/path       -> (Current)
+// ./relative/path     -> (Current)
+// ../relative/path    -> (Parent)
+// ../../relative/path -> (Parent)
+// C:/Program Files    -> C:\
 func getFirstDirectory(path string) string {
 	if len(path) == 0 {
 		return ""
@@ -290,7 +286,17 @@ func getFirstDirectory(path string) string {
 	if path[0] == '/' {
 		return "/"
 	}
-	return ""
+
+	// slashIndex := strings.Index(path, "/")
+	// if slashIndex >= 0 {
+	// 	return path[0:slashIndex]
+	// }
+
+	currentPath, err := filepath.Abs("")
+	if err != nil {
+		return ""
+	}
+	return currentPath
 }
 
 // IsAbs reports whether the path is absolute.
