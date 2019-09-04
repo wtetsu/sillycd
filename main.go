@@ -19,6 +19,7 @@ import (
 	"os/user"
 
 	"github.com/wtetsu/sillycd/pkg/sillycd"
+	"github.com/wtetsu/sillycd/pkg/util"
 )
 
 func main() {
@@ -35,7 +36,7 @@ func main() {
 
 	var target string
 
-	if sillycd.IsAbs(specifiedName) {
+	if util.IsAbs(specifiedName) {
 		target = specifiedName
 	} else {
 		target = "./" + specifiedName
