@@ -39,8 +39,10 @@ func PickOutDirectoryWithFunction(orgTargetDirectory string, doGetDirectories fu
 		targetPath = filepath.ToSlash(orgTargetDirectory)
 	}
 
-	firstDirectory := util.GetFirstDirectory(targetPath)
-	splittedPath := util.SplitPath(targetPath, "/")
+	//firstDirectory := util.GetFirstDirectory(targetPath)
+	//splittedPath := util.SplitPath(targetPath, "/")
+
+	firstDirectory, splittedPath := util.ParsePath(targetPath, "/")
 
 	if len(splittedPath) <= 0 {
 		return filepath.Join(firstDirectory)

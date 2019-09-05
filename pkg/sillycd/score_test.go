@@ -34,8 +34,19 @@ func Test02(t *testing.T) {
 	if computeDirectoryScore("foo-bar-baz", "f") != 10 {
 		t.Fatal("failed test")
 	}
+	if computeDirectoryScore("foo-bar-abc", "fbab") <= 0 {
+		t.Fatal("failed test")
+	}
 
 	if computeDirectoryScore("FOO-BAR-BAZ", "fbb") != 15 {
+		t.Fatal("failed test")
+	}
+
+	if computeDirectoryScore("FOO-BAR-ABC", "fba") <= 0 {
+		t.Fatal("failed test")
+	}
+
+	if computeDirectoryScore("FOO-BAR-ABC", "fbab") <= 0 {
 		t.Fatal("failed test")
 	}
 }
@@ -89,6 +100,15 @@ func Test05(t *testing.T) {
 		t.Fatal("failed test")
 	}
 	if computeDirectoryScore("Program Files (x86)", "pf") != 10 {
+		t.Fatal("failed test")
+	}
+}
+
+func Test06(t *testing.T) {
+	if computeDirectoryScore(".git", ".gitx") != 0 {
+		t.Fatal("failed test")
+	}
+	if computeDirectoryScore(".git", ".") <= 0 {
 		t.Fatal("failed test")
 	}
 }

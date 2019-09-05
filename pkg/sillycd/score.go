@@ -56,6 +56,12 @@ func computeDirectoryScore(directoryName string, specifiedName string) int {
 		restSpecifiedName = restSpecifiedName[len:]
 	}
 
+	if score > 0 {
+		return score
+	}
+
+	score = roughCount(directoryName, specifiedName)
+
 	return score
 }
 
@@ -80,4 +86,49 @@ func matchedPrefixLength(orgString string, orgPrefix string) (int, int) {
 		}
 	}
 	return length, rate
+}
+
+func roughCount(name string, target string) int {
+	lowerName := strings.ToLower(name)
+	lowerTarget := strings.ToLower(target)
+
+	score := 0
+	nameIndex := 0
+	var targetIndex int
+	for targetIndex = 0; targetIndex < len(lowerTarget); targetIndex++ {
+		ch := lowerTarget[targetIndex : targetIndex+1]
+
+		nextIndex := index(lowerName, ch, nameIndex)
+		if nextIndex < 0 {
+			break
+		}
+
+		score++
+		nameIndex = nextIndex
+
+		if nameIndex >= len(lowerName) {
+			break
+		}
+	}
+	if targetIndex < len(target) {
+		score = 0
+	}
+	return score
+}
+
+func index(str string, chars string, startFrom int) int {
+	strLen := len(str)
+	charsLen := len(chars)
+
+	foundIndex := -1
+	for i := startFrom; i < strLen; i++ {
+		if i > strLen-charsLen {
+			break
+		}
+		if str[i:i+charsLen] == chars {
+			foundIndex = i
+			break
+		}
+	}
+	return foundIndex
 }

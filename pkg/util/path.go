@@ -38,11 +38,21 @@ func GetVolumeName() string {
 	return filepath.VolumeName(path)
 }
 
+// ParsePath splits a full path string.
+//
+// - "/usr/local/bin" -> "/", ["usr", "local", "bin"]
+// - "c:/Program Files/Git" -> "c:/", ["Program Files", "Git"]
+func ParsePath(fullPath string, delimiter string) (string, []string) {
+	firstDirectory := getFirstDirectory(fullPath)
+	splittedPath := splitPath(fullPath, "/")
+	return firstDirectory, splittedPath
+}
+
 // SplitPath splits a full path string.
 //
 // - "/usr/local/bin" -> ["usr", "local", "bin"]
 // - "c:/Program Files/Git" -> ["Program Files", "Git"]
-func SplitPath(fullPath string, delimiter string) []string {
+func splitPath(fullPath string, delimiter string) []string {
 	var result []string
 	lastIndex := 0
 	for i := 0; i < len(fullPath); i++ {
@@ -69,7 +79,7 @@ func SplitDirectoryName(directoryName string) []string {
 	var splitNames []string
 	var lastIndex = -1
 	for i, ch := range directoryName {
-		if ch == '-' || ch == '_' || ch == ' ' || ch == '.' {
+		if i > 0 && (ch == '-' || ch == '_' || ch == ' ' || ch == '.') {
 			if lastIndex >= 0 {
 				splitNames = append(splitNames, directoryName[lastIndex:i])
 				lastIndex = -1
@@ -97,7 +107,7 @@ func SplitDirectoryName(directoryName string) []string {
 // - ../relative/path    -> (Parent)
 // - ../../relative/path -> (Parent)
 // - C:/Program Files    -> C:\
-func GetFirstDirectory(path string) string {
+func getFirstDirectory(path string) string {
 	if len(path) == 0 {
 		return ""
 	}
