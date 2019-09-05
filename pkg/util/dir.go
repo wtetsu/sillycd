@@ -21,7 +21,7 @@ import (
 
 // FindDirectories returns a directory list in targetDirectory
 func FindDirectories(targetDirectory string, targetName string) []string {
-	if strings.HasPrefix(targetName, ".") {
+	if targetName == "." || strings.HasPrefix(targetName, "./") {
 		return []string{
 			targetName,
 		}
@@ -40,7 +40,13 @@ func generateFindDictionaryPatterns(targetDirectory string, targetFile string) [
 	if len(targetFile) == 0 {
 		return patterns
 	}
-	var firstLetter = targetFile[0:1]
+
+	var firstLetter string
+	if strings.HasPrefix(targetFile, ".") && len(targetFile) >= 2 {
+		firstLetter = targetFile[0:2]
+	} else {
+		firstLetter = targetFile[0:1]
+	}
 	var lowerLetter = strings.ToLower(firstLetter)
 	var upperLetter = strings.ToUpper(firstLetter)
 
