@@ -46,6 +46,8 @@ function c() {
   if [ $? -eq 0 ]; then
     echo $d
     cd "$d"
+  else
+    echo "$1: No such file or directory" >&2
   fi
 }
 ```
