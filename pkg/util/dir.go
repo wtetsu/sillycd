@@ -21,7 +21,7 @@ import (
 
 // FindDirectories returns a directory list in targetDirectory
 func FindDirectories(targetDirectory string, targetName string) []string {
-	if targetName == "." || strings.HasPrefix(targetName, "./") {
+	if targetName == "." || targetName == ".." {
 		return []string{
 			targetName,
 		}
