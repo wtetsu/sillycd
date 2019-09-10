@@ -4,12 +4,12 @@ mkdir -p .test/abc-def-ghi
 mkdir -p .test/foo-bar-abc
 
 
-CURRNET_DIR=`./sillycd.exe .`
+CURRNET_DIR=`./sillycd .`
 
 function test() {
   param=$1
   expected=$2
-  actual=`./sillycd.exe $1`
+  actual=`./sillycd $1`
   if [ "$actual" == "$expected" ]; then
     echo "OK: $param $actual"
   else
