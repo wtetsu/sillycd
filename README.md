@@ -8,7 +8,7 @@ The fastest way to type cd command
 
 # Usage
 
-You can reduce keystrokes dramatically to change working directory.
+SillyCd helps you reduce keystrokes dramatically for changing current directory.
 
 ## Bash
 
