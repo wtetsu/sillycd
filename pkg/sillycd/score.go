@@ -21,7 +21,7 @@ import (
 
 // "foo-bar-baz"
 //   "f":   10
-//   "fo":  20
+//   "fo":  15
 //   "fb":  20
 //   "fbb": 30
 //   "foo-bar-baz": 999999999
