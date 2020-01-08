@@ -51,6 +51,8 @@ brew tap wtetsu/sillycd
 brew install sillycd
 ```
 
+or [download](https://github.com/wtetsu/sillycd/releases/download/v1.0.0/sillycd-v1.0.0-darwin-amd64.zip) and add it to a PATH directory.
+
 ### Define function
 
 sillycd just writes a matched directory to stdout. If you use sillycd as alternative cd, you have to define a shell function.
