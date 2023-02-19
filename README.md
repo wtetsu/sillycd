@@ -94,8 +94,7 @@ c:\>c /pf
 ## Rules
 
 - You have to type the first character of each directory
-- You can omit middle characters
-- If matched multiple directories, sillycd picks the most "probable" directory
+- If multiple directories were matched, sillycd select the most appropriate directory
 
 ## Third-party data
 
